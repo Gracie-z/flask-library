@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    {% if librarian %}
+        <div class="col-10">
+            <form method="POST" action="" class="w-50 p-3 border border-success m-5"style="background-color: #8FBC8F;"enctype="multipart/form-data" >
+                {{ form.hidden_tag() }}
+                <fieldset class="form-group">
+                <legend>New Books</legend>
+                <!--book-->
+                <div class="form-group">
+                    {{ form.book.label(class = "form-control-label") }}
+                    {% if form.book.errors %}
+                    {{ form.book(class = "form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.book.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.book(class = "form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <!--author-->
+                <div class="form-group">
+                    {{ form.author.label(class = "form-control-label") }}
+                    {% if form.author.errors %}
+                    {{ form.author(class = "form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.author.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.author(class = "form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <!--picture-->
+                <div class="form-group">
+                    {{ form.picture.label() }}
+                    {{ form.picture(class="form-control-file") }}
+                    {% if form.picture.errors %}
+                        {% for error in form.position.errors %}
+                            <span class="text-danger">{{ error }}</span><br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <!--submit-->
+                <div class="form-group">
+                    {{ form.submit(class = "btn btn-outline-light") }}
+                </div>
+                </fieldset>
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
