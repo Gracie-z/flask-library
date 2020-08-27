@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
     {% for book in books %}
-        <article class="media border border-secondary p-3 m-3">
-            <img class="mr-3" style="width: 10%;" src="{{ url_for('static', filename='book_pics/'+book.image_file) }}" alt="{{book.image_file}}">
+        <article class="media border border-secondary p-3 m-3" style="width: 100%;">
+            <img class="mr-3 img-responsive" style="width: 10%;" src="{{ url_for('static', filename='book_pics/'+book.image_file) }}" alt="{{book.image_file}}">
             <div class="media-body">
                 <div class="article-metadata">
                     <small class="text-muted">Date added to the shelve: {{book.date_added.strftime('%Y-%m-%d')}}</small>
                 </div>
-                <h2><a style="font-family: 'Artifika'; text-decoration: none; color:black;" class="article-title" href='#'>{{book.name}}</a></h2>
+                <h2><a style="font-family: 'Artifika'; text-decoration: none; color:black;" class="article-title" href='{{url_for("book", book_id=book.id)}}'>{{book.name}}</a></h2>
                 <h5 style="font-family: 'Artifika';">author(s): {{book.author}} </h5>
             </div>
         </article>

@@ -1,5 +1,5 @@
 
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, abort
 from flask.globals import request
 from wtforms.validators import url
 from libraryweb.models import User, Book, Borrow
@@ -14,6 +14,22 @@ import os
 def home():
     books = Book.query.order_by(Book.date_added.desc())
     return render_template('home.html', title='home', header = 'Home', books = books)
+
+@app.route('/book/<int:book_id>')
+def book(book_id):
+    book = Book.query.get_or_404(book_id)
+    return render_template('book.html', title='book', book=book, header=book.name)
+
+@app.route('/book/<int:book_id>/delete', methods=['POST'])
+@login_required
+def delete_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    if current_user.role != 'librarian':
+        abort(403)
+    db.session.delete(book)
+    db.session.commit()
+    flash('This book has been deleted','warning')
+    return redirect(url_for('home'))
 
 @app.route('/book/update', methods = ['POST','GET'])
 @login_required
