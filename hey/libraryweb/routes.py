@@ -1,6 +1,5 @@
 
-from flask import render_template, flash, redirect, url_for, abort
-from flask.globals import request
+from flask import render_template, flash, redirect, url_for, abort, request
 from wtforms.validators import url
 from libraryweb.models import User, Book, Borrow
 from libraryweb.forms import RegistrationForm, LoginForm, UpdateAccountForm, UpdateBookForm
@@ -12,7 +11,8 @@ import os
 
 @app.route('/home')
 def home():
-    books = Book.query.order_by(Book.date_added.desc())
+    page = request.args.get('page',1 ,type = int)
+    books = Book.query.paginate(per_page = 5, page = page)
     return render_template('home.html', title='home', header = 'Home', books = books)
 
 @app.route('/book/<int:book_id>')
@@ -44,6 +44,8 @@ def book_update():
             db.session.add(book)
             db.session.commit()
             flash('The book has been added to the shelf','success')
+            form.book.data = ""
+            form.author.data=""
         return render_template('book_update.html', title='home', librarian = True, form = form, header ='Book Update')
     else:
         flash('You are not a librarian !','danger')

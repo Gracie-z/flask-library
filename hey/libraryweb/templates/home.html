@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    {% for book in books %}
+    {% for book in books.items %}
         <article class="media border border-secondary p-3 m-3" style="width: 100%;">
             <img class="mr-3 img-responsive" style="width: 10%;" src="{{ url_for('static', filename='book_pics/'+book.image_file) }}" alt="{{book.image_file}}">
             <div class="media-body">
