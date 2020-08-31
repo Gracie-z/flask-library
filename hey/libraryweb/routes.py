@@ -1,6 +1,6 @@
 
 from flask import render_template, flash, redirect, url_for, abort, request
-from wtforms.validators import url
+from wtforms.validators import data_required, url
 from libraryweb.models import User, Book, Borrow
 from libraryweb.forms import RegistrationForm, LoginForm, UpdateAccountForm, UpdateBookForm
 from libraryweb import app, db, bcrypt
@@ -11,9 +11,9 @@ import os
 
 @app.route('/home')
 def home():
-    page = request.args.get('page',1 ,type = int)
-    books = Book.query.paginate(per_page = 5, page = page)
-    return render_template('home.html', title='home', header = 'Home', books = books)
+    page = request.args.get('page',1, type=int)
+    books = Book.query.order_by(Book.date_added.desc()).paginate(per_page=5,page=page)
+    return render_template('home.html', title='home', header = 'Home', books = books,page=page)
 
 @app.route('/book/<int:book_id>')
 def book(book_id):

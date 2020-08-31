@@ -24,3 +24,4 @@ for line in lines:
         i += 1
 
 close_db()
+print(i)

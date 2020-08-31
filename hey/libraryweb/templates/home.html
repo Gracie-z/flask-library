@@ -12,4 +12,15 @@
             </div>
         </article>
     {% endfor %}
+    {% for page_num in books.iter_pages(left_edge=1,right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if page_num == books.page %}
+                <a href="{{ url_for('home', page=page_num) }}" class="btn btn-success mb-4">{{page_num}}</a>
+            {% else %}
+                <a href="{{ url_for('home', page=page_num) }}" class="btn btn-outline-success mb-4">{{page_num}}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
 {% endblock %}
