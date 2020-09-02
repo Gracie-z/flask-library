@@ -23,7 +23,8 @@
         </div>
         <div class="col-3">
             <div class="row alert alert-warning">
-                <h5>Availability</h5>
+                <h5 style="margin-right: 55px;">Availability</h5>
+                <a href="{{url_for('borrow_book', book_id=book.id)}}" role="button" class="btn btn-warning" aria-pressed="true" method="POST">Borrow</a>
             </div>
         </div>
     </div>

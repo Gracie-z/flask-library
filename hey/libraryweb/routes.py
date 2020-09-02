@@ -9,6 +9,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 import secrets
 import os
 from flask_mail import Message
+from datetime import datetime
 
 
 
@@ -21,7 +22,7 @@ def home():
 @app.route('/book/<int:book_id>')
 def book(book_id):
     book = Book.query.get_or_404(book_id)
-    return render_template('book.html', title='book', book=book, header=book.name)
+    return render_template('book.html', title=f'{book.name}', book=book, header=book.name)
 
 @app.route('/book/<int:book_id>/delete', methods=['POST'])
 @login_required
@@ -32,6 +33,20 @@ def delete_book(book_id):
     db.session.delete(book)
     db.session.commit()
     flash('This book has been deleted','warning')
+    return redirect(url_for('home'))
+
+@app.route('/book/<int:book_id>/borrow', methods=['POST','GET'])
+@login_required
+def borrow_book(book_id):
+    borrowed = Borrow.query.filter_by(book_id = book_id).first()
+    if borrowed:
+        date_time = borrowed.time_borrowed.strftime("%m/%d/%Y, %H:%M:%S")
+        flash(f'You have already borrowed this book on {borrowed.time_borrowed}','info')
+    else: 
+        borrow = Borrow(book_id=book_id,user_id=current_user.id)
+        db.session.add(borrow)
+        db.session.commit()
+        flash(f'Transaction successful! Please return this book before {borrow.time_due}','warning')
     return redirect(url_for('home'))
 
 @app.route('/book/update', methods = ['POST','GET'])
@@ -119,7 +134,13 @@ def account():
         form.email.data = current_user.email
         form.position.data = current_user.role
     image_file = url_for('static', filename='user_pics/'+current_user.image_file)
-    return render_template('account.html',title='account', header="Account", image_file=image_file, form=form)
+    # transacation history
+    transactions = Borrow.query.filter_by(user_id = current_user.id)
+    books = [Book.query.get(tran.book_id).name for tran in transactions]
+    time_borrowed = [tran.time_borrowed.strftime("%m/%d/%Y, %H:%M:%S") for tran in transactions]
+    time_due = [tran.time_due.strftime("%m/%d/%Y, %H:%M:%S") for tran in transactions]
+    l = len(books)
+    return render_template('account.html',title='account', header="Account", image_file=image_file, form=form,books = books,time_borrowed=time_borrowed,time_due = time_due,l=l)
 
 @app.route('/')
 def default():
