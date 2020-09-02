@@ -64,5 +64,22 @@ class UpdateBookForm(FlaskForm):
         book = Book.query.filter_by(name=book.data).first()
         if book:
             raise ValidationError('That book has already been shelved !')
+    
+class RequestResetForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Request password reset')
+
+    def validate_email(self, email):     
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError("This email hasn't been registered yet. Please go and register first.")
+
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[
+                             DataRequired(), Length(min=6, max=30)])
+    confirm_password = PasswordField('Confirm password:', validators=[
+                                     DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')
 
     
