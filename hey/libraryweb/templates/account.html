@@ -1,35 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="row">
-    <div class="col-md-4">
-    </div>
-    <div class="col-md-8">
-        <p style="font-family: 'Amita';font-size: 30px; letter-spacing: 2pt; color: darkgreen;" >Hello {{current_user.username}}, welcome back !</p><br><br>
-        <h5>You have Borrowed:</h5><br>
-        <table class="table table-sm table-success">
-            <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Book</th>
-                  <th scope="col">Time Borrowed</th>
-                  <th scope="col">Time due</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in range(0,l) %}
-                    <tr>
-                    <th scope="row">{{i+1}}</th>
-                    <td>{{books[i]}}</td>
-                    <td>{{time_borrowed[i]}}</td>
-                    <td>{{time_due[i]}}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="card border border-success" style="width: 22rem;">
             <img class="card-img-top" style="width: 100%;height: 15vw;object-fit: cover;" src="{{image_file}}" alt="User profile pic">
             <div class="card-body">
@@ -40,7 +12,7 @@
             </div>
         </div><br>
         <p><a class="btn btn-outline-success" data-toggle= "collapse" href="#update_account" role="button" aria-expanded="false" aria-controls="update_account">update account</a></p>
-          <div class="collapse" id="update_account" style="width: 170%;">
+            <div class="collapse" id="update_account" style="width: 170%;">
             <form method="POST" action="" class="w-50 p-3 border border-success m-5"style="background-color: #8FBC8F;" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 <fieldset class="form-group">
@@ -98,7 +70,33 @@
                     </div>
                 </fieldset>
                 </form>
-          </div>
+            </div>
+    </div>
+    <div class="col-md-6">
+        <p style="font-family: 'Amita';font-size: 30px; letter-spacing: 2pt; color: darkgreen;" >Hello <span style="color: black;">{{current_user.username}}</span>, welcome back !</p><br><br>
+        <h5 style="font-family: 'Amarante'; color: #0a451c;">You have Borrowed:</h5><br>
+        <table class="table table-sm table-striped table-success table-bordered table-hover">
+            <thead class="thead">
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Book</th>
+                  <th scope="col">Time Borrowed</th>
+                  <th scope="col">Time due</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(0,l) %}
+                    <tr>
+                    <th scope="row">{{i+1}}</th>
+                    <td>{{books[i]}}</td>
+                    <td>{{time_borrowed[i]}}</td>
+                    <td>{{time_due[i]}}</td>
+                    <td><button type="button" class="btn btn-light"><a href="{{url_for('return_book', book_id = books_id[i])}}">return</a></button></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
+
 {% endblock %}
